@@ -35,26 +35,7 @@ class MyHomePage extends StatelessWidget {
       create: (contex){return ProviderMenuFlotante();},
       child: Stack(
         children: [
-ListView.builder(
-  itemBuilder: (context, index) => Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-    
-      alignment: Alignment.bottomCenter,
-                  
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                  color: _Colores(),
-                  borderRadius: BorderRadius.circular(20)
-                ),
-                  child: Text("$index"),),
-  )),
-          
-          
-
-
-
+           FondoListado(),
           _MenuFlotante(Items: [
             Item(
               icono: Icons.search,
@@ -82,6 +63,55 @@ ListView.builder(
         ],
         ),
       );
+  }
+}
+
+class FondoListado extends StatefulWidget {
+  const FondoListado({
+    super.key,
+  });
+
+  @override
+  State<FondoListado> createState() => _FondoListadoState();
+}
+
+class _FondoListadoState extends State<FondoListado> {
+
+final ScrollController controllerScroll =ScrollController();  
+
+@override
+  void initState() {
+    controllerScroll.addListener(() { 
+      print(controllerScroll.offset);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controllerScroll.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return     ListView.builder(
+      controller: controllerScroll,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+        
+                      alignment: Alignment.bottomCenter,                  
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                      color: _Colores(),
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                      child: Text("$index"),),
+      ));
   }
 }
 
@@ -120,7 +150,12 @@ class _MenuFlotante extends StatefulWidget {
   State<_MenuFlotante> createState() => __MenuFlotanteState();
 }
 
+
 class __MenuFlotanteState extends State<_MenuFlotante> {
+  
+
+  
+  
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -144,9 +179,11 @@ class __MenuFlotanteState extends State<_MenuFlotante> {
         ),
         
         child: Row(
+
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children:List.generate(widget.Items.length, (index){
           return  GestureDetector(
+            
             onTap: widget.Items[index].function,
             child: Icon(widget.Items[index].icono,color: widget.Items[index].color,));
           }) ,
