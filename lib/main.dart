@@ -3,6 +3,35 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+  List<Item> get listadoDeMenu {
+    return [
+              Item(
+                icono: Icons.search,
+                function: (){print("hola 0");},
+                color: _Colores()
+               ),
+               Item(
+                icono: Icons.search,
+                function: (){print("hola 1");},
+                color: _Colores()
+               ),
+               Item(
+                icono: Icons.search,
+                function: (){print("hola 2");},
+                color: _Colores()
+               ),
+               Item(
+                icono: Icons.search,
+                function: (){print("hola 3");},
+                color: _Colores()
+               ),
+
+
+            ];
+  }
+
+
+
 void main() {
   runApp(const MyApp());
 }
@@ -19,52 +48,37 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Scaffold(
-        body: MyHomePage()),
+      home:  Scaffold(
+        body: MyHomePageMenu()),
     );
   }
 }
 
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
+class MyHomePageMenu extends StatelessWidget {
+   MyHomePageMenu({super.key});
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider(
       create: (contex){return ProviderMenuFlotante();},
-      child: Stack(
-        children: [
-           FondoListado(),
-          _MenuFlotante(Items: [
-            Item(
-              icono: Icons.search,
-              function: (){print("hola 0");},
-              color: _Colores()
-             ),
-             Item(
-              icono: Icons.search,
-              function: (){print("hola 1");},
-              color: _Colores()
-             ),
-             Item(
-              icono: Icons.search,
-              function: (){print("hola 2");},
-              color: _Colores()
-             ),
-             Item(
-              icono: Icons.search,
-              function: (){print("hola 3");},
-              color: _Colores()
-             ),
+      child: Builder(
+        builder: (context) {
+      bool estado=(Provider.of<ProviderMenuFlotante>(context).estadoMenu);
 
-
-          ])
-        ],
-        ),
+          return Stack(
+            children: [
+               FondoListado(),
+              estado? _MenuFlotante(Items: listadoDeMenu):SizedBox()
+            ],
+            );
+        }
+      ),
       );
   }
+
 }
+
 
 class FondoListado extends StatefulWidget {
   const FondoListado({
@@ -78,11 +92,14 @@ class FondoListado extends StatefulWidget {
 class _FondoListadoState extends State<FondoListado> {
 
 final ScrollController controllerScroll =ScrollController();  
-
 @override
   void initState() {
+
+    bool estadoM=Provider.of<ProviderMenuFlotante>(context,listen: false).estadoMenu;
     controllerScroll.addListener(() { 
       print(controllerScroll.offset);
+if(controllerScroll.offset<200.0){estadoM=false ;}else {estadoM=false;}
+
     });
     super.initState();
   }
@@ -132,7 +149,7 @@ class Item{
 
 Color _Colores() {
 
-  Random random = Random();
+  final Random random = Random();
 
   return Color.fromRGBO(random.nextInt(256), random.nextInt(256), random.nextInt(256), 1);
   
@@ -197,6 +214,16 @@ class __MenuFlotanteState extends State<_MenuFlotante> {
 
 class ProviderMenuFlotante extends ChangeNotifier{
   
+bool _estadoMenu=true;
+
+bool get estadoMenu => _estadoMenu;
+
+set estadomenu (bool x){
+  _estadoMenu=x;
+  notifyListeners();
+  print(" estado del provider$_estadoMenu");
+}
+
 
 
 
