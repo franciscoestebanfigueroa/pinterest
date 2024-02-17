@@ -10,25 +10,25 @@ List<Item> get listadoDeMenu {
         function: () {
           print("hola 0");
         },
-        color: _Colores()),
+        color: Colors.red),
     Item(
         icono: Icons.search,
         function: () {
           print("hola 1");
         },
-        color: _Colores()),
+        color: Colors.orange),
     Item(
         icono: Icons.search,
         function: () {
           print("hola 2");
         },
-        color: _Colores()),
+        color: Colors.indigo),
     Item(
         icono: Icons.search,
         function: () {
           print("hola 3");
         },
-        color: _Colores()),
+        color: Colors.black),
   ];
 }
 
@@ -66,8 +66,11 @@ class MyHomePageMenu extends StatelessWidget {
 
         return Stack(
           children: [
-            FondoListado(),
-            estado ? _MenuFlotante(Items: listadoDeMenu) : SizedBox()
+            const FondoListado(),
+             AnimatedOpacity(
+              opacity: estado? 0:1,
+              duration: const Duration(milliseconds: 800),
+              child: _MenuFlotante(Items: listadoDeMenu)) 
           ],
         );
       }),
@@ -86,16 +89,20 @@ class FondoListado extends StatefulWidget {
 
 class _FondoListadoState extends State<FondoListado> {
   final ScrollController controllerScroll = ScrollController();
+  double anterior = 0.0;
   @override
   void initState() {
     final estadoM = Provider.of<ProviderMenuFlotante>(context, listen: false);
     controllerScroll.addListener(() {
       //print(controllerScroll.offset);
-      if (controllerScroll.offset > 200.0) {
-        estadoM.estadoMenu = false;
-      } else {
+
+      if (controllerScroll.offset > anterior) {
+
         estadoM.estadoMenu = true;
+      } else {
+        estadoM.estadoMenu = false;
       }
+      anterior=controllerScroll.offset;
     });
     super.initState();
   }
@@ -136,8 +143,10 @@ class Item {
 Color _Colores() {
   final Random random = Random();
 
-  return Color.fromRGBO(
-      random.nextInt(256), random.nextInt(256), random.nextInt(256), 1);
+  //return Color.fromRGBO(
+  //    random.nextInt(256), random.nextInt(256), random.nextInt(256), 1);
+
+  return Colors.blue;
 }
 
 class _MenuFlotante extends StatefulWidget {
@@ -154,7 +163,8 @@ class __MenuFlotanteState extends State<_MenuFlotante> {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 3000),
         padding: const EdgeInsets.symmetric(vertical: 5.0),
         margin: const EdgeInsets.only(bottom: 40.0),
         width: MediaQuery.of(context).size.width * .6,
